@@ -241,12 +241,12 @@ super + shift + {Left,Right,Up,Down}
 # 	bspc node {@east -r -10,@north -r +10,@south -r -10,@west -r +10}
 
 # change window gap at run time  窗口间距实时调整
-super + plus
+super + equal
     bspc config -d focused window_gap $((`bspc config -d focused window_gap` + 5 ))
 
 # Restore original gap
-super + equal
-    bspc config top_padding 6; bspc config -d focused window_gap 15
+super + BackSpace
+    bspc config top_padding 6; bspc config -d focused window_gap 2
 
 super + minus
     bspc config -d focused window_gap $((`bspc config -d focused window_gap` - 5 ))
