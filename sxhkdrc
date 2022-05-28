@@ -1,0 +1,462 @@
+#
+# wm independent hotkeys
+#
+
+
+#======================================================================================
+#==================== 窗口，桌面布局，切换窗口，切换桌面，移动窗口
+#======================================================================================
+#
+# bspwm hotkeys
+#
+
+# make sxhkd reload its configuration files:杀死sxhkd
+super + ctrl + r
+    pkill -USR1 -x sxhkd
+
+# # restart and quit bspwm
+# super + shift + Escape
+# 	sh $HOME/.config/bspwm/reset.sh && bspc quit
+
+
+# # restart   bspwm
+# super + ctrl + r
+# 	sh $HOME/.config/bspwm/reset.sh
+
+
+#  quit bspwm退出bspc
+super + ctrl + e
+    bspc quit
+
+# # quit/restart bspwm
+# shift + alt + {q,r}
+#   bspc {quit,wm -r}
+
+# restart bspwm  使得bspwmrc配置文件重新生效
+super + alt + r
+    bspc wm -r
+
+# close and kill
+# bspc node -c close a window
+# bspc node -k kill a window
+# 结束/杀死窗口
+# super + {_,shift + } q
+#     bspc node -{c,k}
+super + shift + q
+    bspc node -k
+
+super + ctrl + c
+    bspc node -c
+
+# to change layouts
+alt + ctrl + {1,2,3}
+  ~/.config/bspwm/config_scheme.sh {first_child,longest_side,spiral}
+
+# 将标记的节点窗口移动到预选择的窗口上
+# send the newest marked node to the newest preselected node
+super + y
+    bspc node newest.marked.local -n newest.!automatic.local
+
+# swap the current node and the biggest node
+# 切换到当前视图节点最大的窗口
+super + ctrl + g
+    bspc node -s biggest
+
+#===========================================================================================
+# state/flags  一个桌面内窗口的布局方式变换，与窗口的layout有区别
+#===========================================================================================
+
+# set the window state  切换平铺/居中平铺/悬浮/窗口最大化状态
+# super + {t,alt + t,s,f}
+#     bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+# super + {t,p,f,shift+f}
+#     bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# alternate between the tiled and monocle layout
+# super + shift + @space
+#     bspc desktop -l next
+
+# Fullscreen or Monocle
+super + f
+#	bspc desktop -l next
+    bspc node -t "~"fullscreen
+
+# Toggle beetwen floating & tiled
+super + space
+    bspc node -t "~"{floating,tiled}
+
+# Pseudo Tiled & tiled mode
+super + shift + space
+#super + {p,t}
+    bspc node -t "~"{pseudo_tiled,tiled}
+    # bspc node -t "~"{tiled,pseudo_tiled,floating,fullscreen}
+
+
+# set the node flags  节点标记/锁定/便签/私有
+super + alt + {m,x,y,z}
+    bspc node -g {marked,locked,sticky,private}
+
+#===================================================================================
+#======================== focus/swap  切换焦点窗口，移动窗口
+#====================================================================================
+# 在窗口间上下左右移动焦点,不包括浮动窗口，加shift为将当前窗口上下左右移动
+# focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+    bspc node -{f,s} {west,south,north,east}
+
+
+# 选择父类节点，兄弟节点
+# focus the node for the given path jump
+# super + {p,b,comma,period}
+#     bspc node -f @{parent,brother,first,second}
+
+
+# 依次遍历聚焦各个窗口,包括浮动窗口
+# focus the next/previous node in the current desktop
+# Change focus to next window, including floating window
+super + {_,shift + }c
+    bspc node -f {next,prev}.local.!hidden.window
+super +  w
+    bspc node -f next.local
+super +  q
+    bspc node -f prev.local
+
+
+ # 切换最老/最新的节点
+# focus the older or newer node in the focus history
+super + {o,i}
+    bspc wm -h off; \
+    bspc node {older,newer} -f; \
+    bspc wm -h on
+
+# win+num 切换窗口
+# 将焦点窗口移动至其他工作空间: $mod+Shift+$num
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+    bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + plus
+    bspc config -d focused window_gap $((`bspc config -d focused window_gap` + 5 ))
+
+#========================================================================================
+#===========  桌面切换
+#========================================================================================
+# 前后桌面切换,按顺序，不管有无窗口
+# focus the next/previous desktop in the current monitor
+# super + bracket{left,right}
+#     bspc desktop -f {prev,next}.local
+alt + {semicolon,quoteright}
+    bspc desktop -f {prev,next}.local
+
+# 切换上次窗口/桌面
+# focus the last node/desktop
+super + {Tab,grave}
+    bspc {node,desktop} -f last
+# super + b
+#     bspc desktop -f last
+
+# 前后桌面切换,只在有窗口的桌面间切换
+# super + {bracketleft, bracketright}
+super + {semicolon,quoteright}
+    bspc desktop -f {prev,next}.occupied
+
+
+
+#========================================================================================
+#===========  显示器间切换
+#========================================================================================
+
+super + bracketleft
+    bspc monitor -f prev
+
+super + bracketright
+    bspc monitor -f next
+
+
+#=====================================================================================
+#==   preselect  预选择节点区域
+#======================================================================================
+# 预选择节点区域
+# preselect the direction
+super + ctrl + {h,j,k,l}
+    bspc node -p {west,south,north,east}
+
+# 根据数字比例预选则节点区域
+# preselect the ratio
+super + ctrl + {1-9}
+    bspc node -o 0.{1-9}
+
+#   取消预选则当前焦点节点区域
+# cancel the preselection for the focused node
+super + ctrl + space
+    bspc node -p cancel
+
+# 取消预选则窗口的节点区域
+# cancel the preselection for the focused desktop
+super + ctrl + shift + space
+    bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+#==========================================================================================
+#=============================   窗口大小调整
+#==========================================================================================
+# 扩大范围
+# expand a window by moving one of its side outward
+super + alt + {h,j,k,l}
+    bspc node -z {left -20 0,  bottom 0 20, top 0 -20,  right 20 0}
+# 缩小节点大小
+# contract a window by moving one of its side inward
+super + alt + shift + {h,j,k,l}
+    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+
+
+# # 扩大范围
+# super + ctrl {Left,Right,Up,Down}
+#     bspc node -z {left -20 0,  right 20 0,  top 0 -20,  bottom 0 20}
+# # 缩小节点大小
+# super + shift + ctrl  + {Left,Right,Up,Down}
+#     bspc node -z {left 20 0,  right -20 0,   top 0 20,bottom 0 -20}
+
+# 移动悬浮窗口
+# move a floating window
+super + {Left,Down,Up,Right}
+    bspc node -v {-20 0,0 20,0 -20,20 0}
+
+
+# move floating windows (requires baskerville's xdo pacacur -S xdo-git)
+super + ctrl +  {Left,Right,Up,Down}
+    xdo move {-x -50,-x +50,-y -50,-y +50}
+
+# Resize floating windows
+# super + shift + {h,l,k,j}
+super + shift + {Left,Right,Up,Down}
+    xdo resize {-w -30,-w +30,-h -30,-h +30}
+
+# # Expand tiled space
+# super + alt + {h,j,k,l}
+# 	bspc node {@west -r -10,@south -r +10,@north -r -10,@east -r +10}
+
+# # Contract tiled space
+# super + alt + shift + {h,j,k,l}
+# 	bspc node {@east -r -10,@north -r +10,@south -r -10,@west -r +10}
+
+# change window gap at run time  窗口间距实时调整
+super + plus
+    bspc config -d focused window_gap $((`bspc config -d focused window_gap` + 5 ))
+
+# Restore original gap
+super + equal
+    bspc config top_padding 6; bspc config -d focused window_gap 15
+
+super + minus
+    bspc config -d focused window_gap $((`bspc config -d focused window_gap` - 5 ))
+
+
+#==========================================================================================
+#=============================   窗口初始布局调整
+#==========================================================================================
+
+# for spiral mode
+alt + shift + s
+    bspc config automatic_scheme spiral
+
+# for longest side mode
+alt shift + l
+    bspc config automatic_scheme longest_side
+
+# for automatic layout
+super + alt + 1
+    bspc config initial_polarity first_child
+super + alt + 2
+    bspc config initial_polarity  second_child
+
+
+# restart polybar
+# alt + p
+#     sh ~/.config/bspwm/bin/bspbar
+
+# # start IDEs
+# alt + {c,i,l,y,w,d,h,a,r,g}
+#     sh ~/.config/bspwm/scripts/start_ides.sh {code, idea, clion, pycharm, webstorm, datagrip, phpstorm, android, rider, goland}
+
+
+
+
+#==========================================================================================
+#=============================   Mouse bindings
+#==========================================================================================
+
+
+#========================================================================================
+#   APP 快捷键
+#========================================================================================
+
+# terminal emulator
+super + Return
+    st
+
+
+super + x
+    xterm
+
+# super + shift + Return
+#     kitty
+
+super + shift + g
+    gedit
+
+super + z
+    zathura
+
+
+super + n
+   nautilus
+
+
+# super + shift + t
+#    typora
+
+
+# super + shift + t
+#    thunar
+
+# program launcher
+super + r
+    rofi -show combi
+
+
+super + d
+    dmenu_run -fn 'xos JetBrainsMono:size=16' -sb '#88C0D0' -nb '#2E3440' -nf '#D8DEE9' -sf '#434C5E'
+
+# google-chrome-stable
+super + g
+     google-chrome-stable
+
+
+
+super + shift + v
+    VBoxManage startvm "WinDev2008Eval" --type gui
+
+
+super + shift +  b
+    feh --recursive --randomize --bg-fill   $(xdg-user-dir PICTURES)'/Wallpapers/'
+    # feh --recursive --randomize --bg-fill ~/Pictures/{backgrounds,nsfw}
+
+
+
+#========================================================================================
+#  系统快捷键
+#========================================================================================
+
+
+# 锁屏
+alt + ctrl + Delete
+    betterlockscreen -l
+
+super + alt + x
+    xscreensaver-command -lock
+
+super + alt + s
+    slock
+super + alt + i
+    i3lock -c '#808080'
+
+#  
+# super + ctrl + l
+#     sh ~/.local/bin/switch "l" "bspwm"
+
+# super + ctrl + n
+#     sh ~/.local/bin/switch "n" "bspwm"
+
+
+
+# 音量调节
+XF86AudioRaiseVolume
+    pactl set-sink-volume 0 +3%
+
+XF86AudioLowerVolume
+    pactl set-sink-volume 0 -3%
+
+XF86AudioMute
+    pactl set-sink-mute 0 toggle
+
+
+# super + shift + equal
+#     amixer set Master 5%+
+
+# super + shift + minus
+#     amixer set Master 5%-
+
+# super + shift + BackSpace
+#     amixer -D pulse set Master 1+ toggle
+
+super + ctrl + equal
+    pactl set-sink-volume @DEFAULT_SINK@ +8%
+
+super + ctrl + minus
+    pactl set-sink-volume @DEFAULT_SINK@ -8%
+
+super + ctrl + BackSpace
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+
+
+# 音乐播放器 controls
+XF86AudioPlay
+    playerctl play-pause
+
+XF86AudioNext
+    playerctl next
+
+XF86AudioPrev
+    playerctl previous
+
+super + alt + p
+    mpc toggle
+
+super + alt + Right
+    mpc next
+
+super + alt + Left
+    mpc prev
+
+
+
+# 我使用 xbacklight 来调节亮度，你也可以选择安装其他的
+# Brighness control
+XF86MonBrightnessUp
+    light -A 5
+    xbacklight -inc 5
+XF86MonBrightnessDown
+    light -U 5
+    xbacklight -dec 5
+
+
+
+#开启/关闭触摸板
+super + ctrl + t
+    bash   ./touchpad.sh
+XF86TouchpadToggle
+    bash   ./touchpad.sh
+
+
+
+#======================================================================================
+#==================== 快速截图
+#======================================================================================
+super + shift + Print
+    deepin-screenshot
+
+shift+Print
+    flameshot gui -p  $(xdg-user-dir PICTURES) -d 2000 ;exec notify-send '火焰截图 无延时 自己选择截图区域 保存在~/图片'
+
+ctrl+Print
+    flameshot full -c -p  $(xdg-user-dir PICTURES)  -d 2000 ;exec notify-send '火焰截图 捕获全屏（无GUI）并保存到剪贴板和路径~/图片 延迟2秒'
+
+
+Print
+    scrot -cd 3 $(xdg-user-dir PICTURES)/'Scrot_%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'xclip -selection clipboard -target image/png -i $f; viewnior $f';exec notify-send 'Scrot截图 截取全屏 无GUI 保存指定路径 延迟3s 复制到剪切板 打开查看'
+
+alt + Print
+    scrot $(xdg-user-dir PICTURES)/'Scrot_%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'viewnior $f';exec notify-send 'Scrot截图 截取全屏，无GUI，保存指定路径 打开查看'
+

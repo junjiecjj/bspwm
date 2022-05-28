@@ -1,0 +1,284 @@
+#! /bin/sh
+
+# Kill if already running
+killall -9 picom sxhkd dunst nm-applet ksuperkey xfce4-power-manager
+sxhkd &
+xsetroot -cursor_name left_ptr
+# wmname LG3D
+
+
+#========================================================================================
+# ==================   桌面  =================
+#========================================================================================
+# 以下示例配置将会配置10个桌面在单独的显示器上：
+# bspc monitor -d 1:Browser  2:Code 3:Term  4:File  5:Chat  6:AuVideo  7  8  9
+# bspc monitor -d 1  2  3:Term  4:File  5:Chat  6:AuVideo  7  8  9
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# 如果使用多显示器，则需要为每一个显示器配置：
+# bspc monitor DVI-I-1 -d I II III IV
+# bspc monitor DVI-I-2 -d V VI VII
+# bspc monitor DP-1 -d VIII IX X
+
+
+bspc config top_padding        22
+bspc config bottom_padding     1
+bspc config left_padding       0
+bspc config right_padding      1
+
+# 给当前活动窗口加一个1px的红色框
+bspc config border_width         2
+
+# 设置窗口之间的空隙为10px
+bspc config window_gap            2
+
+# Focusing behavior
+# bspc config focus_follows_pointer false
+bspc config focus_follows_pointer   true
+bspc config history_aware_focus     true
+bspc config focus_by_distance       true
+bspc config ignore_ewmh_focus       true
+bspc config pointer_follows_monitor true
+
+# bspc config normal_border_color "#282828"
+# bspc config focused_border_color "#00ff00"
+# bspc config active_border_color "#000000"
+# bspc config presel_feedback_color "#FABD2F"
+
+# Border colors
+bspc config normal_border_color "#484848"
+# bspc config focused_border_color "#1F8999"
+bspc config focused_border_color "#00ff00"
+bspc config active_border_color "#26E2FF"
+bspc config urgent_border_color "#B58900"
+bspc config presel_border_color "#26E2FF"
+
+
+
+# Misc
+bspc config split_ratio 0.50
+bspc config auto_alternate      true
+bspc config auto_cancel         true
+bspc config initial_polarity   second_child
+
+# Borders and gaps
+bspc config borderless_monocle       true
+bspc config gapless_monocle          true
+bspc config paddingless_monocle      true
+bspc config single_monocle           false
+unclutter --ignore-scrooling &
+
+# Multihead behavior
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+
+# It looks like these options get overridden by Compton...
+bspc config normal_frame_opacity 0.75
+bspc config focused_frame_opacity 0.75
+
+# Enable Super Keys For Menu
+ksuperkey -e 'Super_L=Alt_L|F1' &
+ksuperkey -e 'Super_R=Alt_L|F1' &
+
+
+#========================================================================================
+# 设置窗口规则 
+#========================================================================================
+bspc rule -a firefox desktop='^1'
+bspc rule -a Nightly desktop='^1' state=tiled
+bspc rule -a FirefoxNightly state=tiled
+
+# 下面为一些程序的窗口的特殊设置
+# 将vlc和图片浏览设置为浮动窗口
+bspc rule -a vlc                 state=floating
+bspc rule -a mplayer             state=floating
+bspc rule -a smplayer            state=floating
+bspc rule -a netease-cloud-music state=floating
+bspc rule -a Sxiv                state=floating
+bspc rule -a Screenkey           manage=off
+bspc rule -a mplayer2            state=floating
+
+
+# 虚拟机也需要使用浮动窗口
+bspc rule -a "VirtualBox Manager" state=floating manage=off
+bspc rule -a "VirtualBox Machine" state=floating manage=off
+bspc rule -a Zathura state=tiled
+bspc rule -a Emacs state=tiled
+bspc rule -a Xfce4-about state=floating
+bspc rule -a Steam desktop='^5' state=floating
+bspc rule -a spotify desktop='^4' state=pseudo_tiled
+bspc rule -a Qq state=floating desktop='^8'
+
+
+#===================================================================================
+#==========   Autostart  Proram =============================
+#====================================================================================
+# 启动Compositor,主要用于一些特殊效果，如透明背景，阴影等
+# 这里还可以增加一些自启动的程序，比如我还增加了fcitx
+
+
+# background
+feh --recursive --randomize --bg-fill   $(xdg-user-dir PICTURES)'/Wallpapers/'
+
+
+# picom  X
+# 启用窗口透明
+# picom --config ~/.config/picom/picom_NoblurRoundBrokenCorner.conf -b
+
+##  TopBar
+# xmobar  ~/.xmonad/xmobar/xmobarrc.hs  &
+# xmobar  ~/.config/bspwm/xmobarrc.hs  &
+
+# input method
+# fcitx  &
+# fcitx5 &
+
+#
+# dunst &
+
+#   screenlock
+# sh   ~/.fehbg
+# Screensaver 锁屏工具
+# xautolock -time 10 -locker '/usr/bin/betterlockscreen -l' -corners ---- -cornersize 30 &
+# xscreensaver -no-splash &
+
+
+
+# # Redshift 护眼工具
+# redshift &
+
+
+# # 剪切板管理器
+# copyq &
+# xfce4-power-manager &
+
+# # 坚果云
+# nutstore &
+
+# # Network Applet用于显示网络托盘图标，
+# nm-applet &
+# # blue Applet蓝牙系统托盘
+# blueman-applet &
+
+
+
+# # 火焰截图
+# nohup flameshot >/dev/null 2>&1  &
+
+
+feh --recursive --randomize --bg-fill   $(xdg-user-dir PICTURES)'/Wallpapers/'
+# feh --recursive  --bg-fill $(xdg-user-dir PICTURES)'/Wallpapers/background.jpg'
+
+
+# Power manager
+if [ -z "$(pgrep xfce4-power-manager)" ] ; then
+    xfce4-power-manager &
+fi
+
+
+
+
+# Network Applet用于显示网络托盘图标，
+if [ -z "$(pgrep nm-applet)" ] ; then
+    nm-applet &
+fi
+
+
+# blue Applet蓝牙系统托盘
+if [ -z "$(pgrep blueman-applet)" ] ; then
+    blueman-applet &
+fi
+
+# Screensaver 锁屏工具
+if [ -z "$(pgrep xscreensaver)" ] ; then
+    xscreensaver -no-splash &
+fi
+
+
+# Redshift 护眼工具
+killall  redshift
+if [ -z "$(pgrep redshift)" ] ; then
+    # redshift-gtk &
+    red 4000
+fi
+
+
+# 启用窗口透明
+if [ -z "$(pgrep picom)" ] ; then
+    picom --experimental-backends -b
+fi
+
+
+# 火焰截图
+if [ -z "$(pgrep   flameshot)" ] ; then
+    nohup flameshot >/dev/null 2>&1  &
+fi
+
+
+# 桌面通知
+if [ -z "$(pgrep   dunst)" ] ; then
+    dunst &
+fi
+
+
+
+# 剪切板管理器
+if [ -z "$(pgrep  copyq )" ] ; then
+    copyq &
+fi
+
+
+
+# 开启小键盘
+if [ -z "$(pgrep   numlockx)" ] ; then
+   numlockx on
+fi
+
+
+if [ -z "$(pgrep  fcitx )" ] ; then
+    fcitx   &
+    fcitx5   &
+fi
+
+
+
+#音频相关的托盘
+if [ -z "$(pgrep  pasystray )" ] ; then
+     nohup   pasystray     >  /dev/null  2>&1 &
+fi
+
+
+if [ -z "$(pgrep  kmix )" ] ; then
+     nohup   kmix     >  /dev/null  2>&1 &
+fi
+
+
+if [ -z "$(pgrep  pa-applet )" ] ; then
+     nohup   /foo/bar/bin/pa-applet       >  /dev/null  2>&1 &
+fi
+
+if [ -z "$(pgrep  mictray )" ] ; then
+     nohup   mictray       >  /dev/null  2>&1 &
+fi
+
+
+#  xautolock锁屏工具
+if [ -z "$(pgrep  xautolock)" ] ; then
+     xautolock -time 30 -locker '/usr/bin/betterlockscreen -l'   -corners +000 -cornersize 5 -cornerdelay 5 -cornerredelay 180 &
+     sh   ~/.fehbg
+fi
+
+
+
+# System tray
+if [ -z "$(pgrep trayer)" ] ; then
+    trayer --edge top --align right --widthtype percent --width 10 --heighttype pixel --height 22  --SetPartialStrut true --transparent true --alpha 60 --tint 0x777777 --expand true
+fi
+
+
+# if [ -z "$(pgrep stalonetray)" ] ; then
+#     # stalonetray  -geometry  "10x1-0+0" -bg "#777777" --icon-size 17 --transparent false --sticky true --window-layer "bottom"  &
+#     stalonetray  -geometry  "10x1-0+0" -bg "#777777" --icon-size 16 --transparent false --sticky true --window-layer "bottom" --grow-gravity  NW  --icon-gravity NW  --max-geometry 0x0 --scrollbars none --sticky  true  --window-type  dock
+# fi
+
