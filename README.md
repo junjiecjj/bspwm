@@ -1,20 +1,9 @@
+# BspWM 安装与配置
 
-[4~
-[?6c
-
-
-
-[<0;59;27M
-
-Q
-
-
-
-
+```
+sudo apt install bspwm
 
-OA
+sudo apt install bspwm sxhkd
 
-OA
-
 
-
+```bash

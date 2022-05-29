@@ -4,36 +4,36 @@
 
 
 #======================================================================================
-#==================== 窗口，桌面布局，切换窗口，切换桌面，移动窗口
+#==================== 系统命令
 #======================================================================================
 #
 # bspwm hotkeys
 #
 
+
+# Exit bspwm
+super + alt + Escape
+    ~/.config/bspwm/scripts/dmenu-logout
+
+
+
 # make sxhkd reload its configuration files:杀死sxhkd
-super + ctrl + r
-    pkill -USR1 -x sxhkd
-
-# # restart and quit bspwm
-# super + shift + Escape
-# 	sh $HOME/.config/bspwm/reset.sh && bspc quit
-
-
-# # restart   bspwm
 # super + ctrl + r
-# 	sh $HOME/.config/bspwm/reset.sh
+#     pkill -USR1 -x sxhkd
 
 
-#  quit bspwm退出bspc
-super + ctrl + e
-    bspc quit
 
 # # quit/restart bspwm
 # shift + alt + {q,r}
 #   bspc {quit,wm -r}
 
-# restart bspwm  使得bspwmrc配置文件重新生效
-super + alt + r
+#  quit bspwm退出bspc
+super + ctrl + e
+    bspc quit
+
+
+# restart bspwm  使得bspwmrc和sxhkdrc配置文件重新生效
+super + ctrl + r
     bspc wm -r
 
 # close and kill
@@ -47,10 +47,6 @@ super + shift + q
 
 super + ctrl + c
     bspc node -c
-
-# to change layouts
-alt + ctrl + {1,2,3}
-  ~/.config/bspwm/config_scheme.sh {first_child,longest_side,spiral}
 
 # 将标记的节点窗口移动到预选择的窗口上
 # send the newest marked node to the newest preselected node
@@ -78,7 +74,7 @@ super + ctrl + g
 
 # Fullscreen or Monocle  ,  最大化和最大化还原
 super + f
-#	bspc desktop -l next
+#   bspc desktop -l next
     bspc node -t "~"fullscreen
 
 # Toggle beetwen floating & tiled,将当前窗口在浮动和平铺间切换
@@ -103,8 +99,8 @@ super + space
 
 
 # set the node flags  节点标记/锁定/便签/私有
-super + alt + {m,x,y,z}
-    bspc node -g {marked,locked,sticky,private}
+# super + alt + {m,x,y,z}
+#     bspc node -g {marked,locked,sticky,private}
 
 
 # rotate the whole desktop
@@ -129,8 +125,13 @@ super + shift + v
 #====================================================================================
 # 在窗口间上下左右移动焦点,不包括浮动窗口，加shift为将当前窗口上下左右移动
 # focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-    bspc node -{f,s} {west,south,north,east}
+# super + {_,shift + }{h,j,k,l}
+#     bspc node -{f,s} {west,south,north,east}
+
+# 加shift为将当前窗口上下左右移动
+super + shift + {h,j,k,l}
+    bspc node -s {west,south,north,east}
+
 
 
 # 选择父类节点，兄弟节点
@@ -149,22 +150,32 @@ super +  w
 super +  q
     bspc node -f prev.local
 
+super +  k
+    bspc node -f next.local
+super +  j
+    bspc node -f prev.local
+
+super +  period
+    bspc node -f next.local
+super +  comma
+    bspc node -f prev.local
+
+
+
+
 
  # 切换最老/最新的节点
 # focus the older or newer node in the focus history
-super + {o,i}
-    bspc wm -h off; \
-    bspc node {older,newer} -f; \
-    bspc wm -h on
+# super + {o,i}
+#     bspc wm -h off; \
+#     bspc node {older,newer} -f; \
+#     bspc wm -h on
 
 # win+num 切换窗口
 # 将焦点窗口移动至其他工作空间: $mod+Shift+$num
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
     bspc {desktop -f,node -d} '^{1-9,10}'
-
-super + plus
-    bspc config -d focused window_gap $((`bspc config -d focused window_gap` + 5 ))
 
 #========================================================================================
 #===========  桌面切换
@@ -251,6 +262,7 @@ super + {Left,Down,Up,Right}
     bspc node -v {-20 0,0 20,0 -20,20 0}
 
 
+# 移动悬浮窗口
 # move floating windows (requires baskerville's xdo pacacur -S xdo-git)
 super + ctrl +  {Left,Right,Up,Down}
     xdo move {-x -50,-x +50,-y -50,-y +50}
@@ -259,6 +271,12 @@ super + ctrl +  {Left,Right,Up,Down}
 # super + shift + {h,l,k,j}
 super + shift + {Left,Right,Up,Down}
     xdo resize {-w -30,-w +30,-h -30,-h +30}
+
+
+# 移动悬浮窗口
+# Move floating window
+super + alt + {_,shift + }{Left,Down,Up,Right}
+    ./scripts/move-window {_,edge-}{west,south,north,east}
 
 # # Expand tiled space
 # super + alt + {h,j,k,l}
@@ -279,24 +297,33 @@ super + BackSpace
 super + minus
     bspc config -d focused window_gap $((`bspc config -d focused window_gap` - 5 ))
 
+# super + plus
+#     bspc config -d focused window_gap $((`bspc config -d focused window_gap` + 5 ))
+
 
 #==========================================================================================
 #=============================   窗口初始布局调整
 #==========================================================================================
 
-# for spiral mode
-alt + shift + s
-    bspc config automatic_scheme spiral
+# to change layouts
+super + alt + {1,2,3,4}
+  ~/.config/bspwm/scripts/config_scheme.sh {first_child,second_child,longest_side,spiral}
 
-# for longest side mode
-alt shift + l
-    bspc config automatic_scheme longest_side
 
-# for automatic layout
-super + alt + 1
-    bspc config initial_polarity first_child
-super + alt + 2
-    bspc config initial_polarity  second_child
+
+# # for spiral mode
+# alt + shift + s
+#     bspc config automatic_scheme spiral
+
+# # for longest side mode
+# alt shift + l
+#     bspc config automatic_scheme longest_side
+
+# # for automatic layout
+# super + alt + 1
+#     bspc config initial_polarity first_child
+# super + alt + 2
+#     bspc config initial_polarity  second_child
 
 
 # restart polybar
@@ -315,6 +342,10 @@ super + alt + 2
 #==========================================================================================
 #=============================   Mouse bindings
 #==========================================================================================
+# Toggle visibility of systray
+super + t
+    ./scripts/toggle-systray
+
 
 
 #========================================================================================
@@ -334,6 +365,13 @@ super + x
 
 super + shift + g
     gedit
+
+
+
+super + shift + n
+    st -e  nvim
+
+
 
 super + z
     zathura
@@ -364,7 +402,7 @@ super + g
 
 
 
-super + shift + v
+super + ctrl + v
     VBoxManage startvm "WinDev2008Eval" --type gui
 
 
@@ -380,14 +418,20 @@ super + shift +  b
 
 
 # 锁屏
-alt + ctrl + Delete
-    betterlockscreen -l
+super + alt + b
+    betterlockscreen  --lock dim
+    # betterlockscreen -u   $(xdg-user-dir PICTURES)'/Wallpapers/3DBed.jpg' -l blur
+    # betterlockscreen -u   $(xdg-user-dir PICTURES)'/Wallpapers/3DBed.jpg' -l dim
+    # betterlockscreen -l
+    # betterlockscreen -l  blur
 
 super + alt + x
     xscreensaver-command -lock
+    # xscreensaver -no-splash
 
 super + alt + s
     slock
+
 super + alt + i
     i3lock -c '#808080'
 
