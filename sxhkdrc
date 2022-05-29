@@ -76,25 +76,53 @@ super + ctrl + g
 # super + shift + @space
 #     bspc desktop -l next
 
-# Fullscreen or Monocle
+# Fullscreen or Monocle  ,  最大化和最大化还原
 super + f
 #	bspc desktop -l next
     bspc node -t "~"fullscreen
 
-# Toggle beetwen floating & tiled
-super + space
+# Toggle beetwen floating & tiled,将当前窗口在浮动和平铺间切换
+super + shift +  space
     bspc node -t "~"{floating,tiled}
 
 # Pseudo Tiled & tiled mode
-super + shift + space
+super + alt + space
 #super + {p,t}
     bspc node -t "~"{pseudo_tiled,tiled}
     # bspc node -t "~"{tiled,pseudo_tiled,floating,fullscreen}
+
+# focus a floating window from a tiled window
+# 在浮动和平铺窗口之间切换焦点
+super + space
+    if [ "$(bspc query -N -n focused.floating)" ]; then \
+        bspc node -f last.tiled.local;\
+    else \
+        bspc node -f last.floating.local;\
+    fi
+
 
 
 # set the node flags  节点标记/锁定/便签/私有
 super + alt + {m,x,y,z}
     bspc node -g {marked,locked,sticky,private}
+
+
+# rotate the whole desktop
+super + shift + r
+    bspc node @/ -R 90
+
+# rotate the parent of current focused
+super + o
+    bspc node @parent -R 90
+
+# hide window
+super + v
+    bspc node -g hidden
+
+# unhide window
+super + shift + v
+    bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
+
 
 #===================================================================================
 #======================== focus/swap  切换焦点窗口，移动窗口
@@ -278,6 +306,8 @@ super + alt + 2
 # # start IDEs
 # alt + {c,i,l,y,w,d,h,a,r,g}
 #     sh ~/.config/bspwm/scripts/start_ides.sh {code, idea, clion, pycharm, webstorm, datagrip, phpstorm, android, rider, goland}
+
+
 
 
 
