@@ -1,0 +1,17 @@
+#!/bin/zsh
+mail_dir="$HOME/.mail/private/[Gmail].All Mail/new"
+interval=300
+if [ -e $mail_dir ]; then
+    change=$(stat -c %Y $mail_dir)
+    recent=" "
+    if [ $(( $(date +%s) - $change )) -lt $interval ]; then
+        recent="*"
+    fi
+
+    mail=$(( $(ls -l $mail_dir | wc -l) - 1 ))
+else
+    mail=""
+    recent=""
+fi
+
+print "$recent$mail"

@@ -104,19 +104,19 @@ super + space
 
 
 # rotate the whole desktop
-super + shift + r
+super + shift + j
     bspc node @/ -R 90
 
 # rotate the parent of current focused
-super + o
+super + shift + k
     bspc node @parent -R 90
 
 # hide window
-super + v
+super + m
     bspc node -g hidden
 
 # unhide window
-super + shift + v
+super + shift + m
     bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
 
 
@@ -509,9 +509,9 @@ XF86MonBrightnessDown
 
 #开启/关闭触摸板
 super + ctrl + t
-    bash   ./touchpad.sh
+    bash   ./scripts/touchpad.sh
 XF86TouchpadToggle
-    bash   ./touchpad.sh
+    bash   ./scripts/touchpad.sh
 
 
 

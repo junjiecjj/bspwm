@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+#########################################################################
+# File Name: bspwm_dzen.sh
+# Author:陈俊杰
+# mail: 2716705056@qq.com
+# Created Time: 2022年05月30日 星期一 12时01分07秒
+
+# 此程序的功能是：
+#########################################################################
+
+
+
+while true; do
+  if read line < $PANEL_FIFO; then
+    wm_status=""
+    IFS=':' read -a array <<< "$line"
+    for element in "${array[@]}"; do
+      if [[ $element =~ ^D ]]; then
+        wm_status="$wm_status ^fg(white)${element:1}"
+      elif [[ $element =~ ^d ]]; then
+        wm_status="$wm_status ^ca(1, bspc use ${element:1})^fg(darkgray)${element:1}^ca()"
+      elif [[ $element =~ ^E ]]; then
+        wm_status="$wm_status ^ca(1, bspc use ${element:1})^fg(#6b6b6b)${element:1}^ca()"
+      elif [[ $element =~ ^L ]]; then
+        wm_status="$wm_status • ^ca(1, bspc cycle_layout)^fg(white)${element:1}^ca()"
+      fi
+    done
+
+    echo $wm_status
+  fi
+done
