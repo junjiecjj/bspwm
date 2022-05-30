@@ -62,7 +62,7 @@ conky.config = {
     minimum_height = 10,
     minimum_width =  30,
     --#两条设定Conky输出范围距离屏幕边界的像素数量，最小为10像素。
-    gap_x  = 860,
+    gap_x  = 820,
     gap_y =  0,
 
     default_color =  "#FFFFFF",
