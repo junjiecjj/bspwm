@@ -88,7 +88,7 @@ conky.text = [[
 ${font CaskadiaCove Nerd Font Mono:style=SemiLight:size=11} \
 ${color #00BFFF}Up: ${color}${upspeed wlp59s0}/s  ${color #00BFFF}Down: ${color}${downspeed wlp59s0}/s  \
 ${color #00BFFF}IP:${addr wlp59s0} | \
-${color #FFA500}CPU:${color}${cpu cpu0}% \
+${color #FFA500}CPU:${color}${cpu cpu}% \
 ${color #FFA500}Mem:${color}${mem} \
 ${color #FFA500}/:${color}${fs_used /} ${color #FFA500}/home:  ${color}${fs_used /home} | \
 ${color #00ffcf}BAT ${color}${battery_percent}% | \
