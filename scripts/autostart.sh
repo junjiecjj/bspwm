@@ -11,20 +11,8 @@
 
 sh ~/.fehbg
 
-arr=(  "conky" "~/.config/bspwm/bin/bspbar")
 
-for value in ${arr[@]}
-do
-    isExist=`ps -ef | grep "$value" | grep -v grep | wc -l`
-    if [ $isExist == 0 ]
-    then
-        exec "$value" &
-    fi
-done
-
-
-
-
+conky -c  ~/.config/bspwm/conkyrc_bspwm
 
 #===================================================================================
 #==========   Autostart  Proram =============================

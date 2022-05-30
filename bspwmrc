@@ -112,7 +112,7 @@ bspc rule -a Qq state=floating desktop='^8'
 #==========   Autostart  Proram =============================
 #====================================================================================
 
-
+bash panel &
 bash $HOME/.config/bspwm/scripts/autostart.sh
 
 
