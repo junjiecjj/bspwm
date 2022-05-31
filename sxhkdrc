@@ -435,7 +435,7 @@ super + alt + s
 super + alt + i
     i3lock -c '#808080'
 
-#  
+#
 # super + ctrl + l
 #     sh ~/.local/bin/switch "l" "bspwm"
 
