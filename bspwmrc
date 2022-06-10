@@ -7,6 +7,8 @@ export BSPWM_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/bspwm"
 
 # Kill if already running
 killall -9  picom  sxhkd  dunst  redshift   xfce4-power-manager
+
+
 # sxhkd &
 # Launch keybinding daemon
 sxhkd -c   ~/.config/bspwm/sxhkdrc &
