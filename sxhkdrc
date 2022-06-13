@@ -205,6 +205,9 @@ super + {semicolon,quoteright}
 #===========  显示器间切换
 #========================================================================================
 
+super + Escape
+    bspc monitor -f prev
+
 super + bracketleft
     bspc monitor -f prev
 
@@ -244,7 +247,7 @@ super + alt + {h,j,k,l}
     bspc node -z {left -20 0,  bottom 0 20, top 0 -20,  right 20 0}
 # 缩小节点大小
 # contract a window by moving one of its side inward
-super + alt + shift + {h,j,k,l}
+super + alt + shift + {l,j,k,h}
     bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 
@@ -509,7 +512,7 @@ XF86MonBrightnessDown
 
 #开启/关闭触摸板
 super + ctrl + t
-    bash   ./scripts/touchpad.sh
+    bash   ~/.config/bspwm/scripts/touchpad.sh
 XF86TouchpadToggle
     bash   ./scripts/touchpad.sh
 

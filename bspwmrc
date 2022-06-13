@@ -27,12 +27,15 @@ bspc config external_rules_command "$BSPWM_CONFIG/scripts/external_rules"
 # bspc monitor -d 1:Browser  2:Code 3:Term  4:File  5:Chat  6:AuVideo  7  8  9
 # bspc monitor -d 1  2  3:Term  4:File  5:Chat  6:AuVideo  7  8  9
 
-bspc monitor -d I II III IV V VI VII VIII IX X
+# bspc monitor -d I II III IV V VI VII VIII IX X
 
 # 如果使用多显示器，则需要为每一个显示器配置：
 # bspc monitor DVI-I-1 -d I II III IV
 # bspc monitor DVI-I-2 -d V VI VII
 # bspc monitor DP-1 -d VIII IX X
+
+bspc monitor eDP-1 -d  1:Browser   3:Term    5:Chat
+bspc monitor DP-3 -d   2:Code   4:File  6:AuVideo
 
 
 bspc config top_padding        22
